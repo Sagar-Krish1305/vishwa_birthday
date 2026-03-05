@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Happy Birthday Vishwa ❤️</title>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI";
+        background: #0b0c2a;
+        color: white;
+        text-align: center;
+        overflow-x: hidden;
+      }
+
+      h1 {
+        font-size: 50px;
+        margin-top: 40px;
+      }
+
+      #countdown {
+        font-size: 30px;
+        margin: 20px;
+      }
+
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      .gallery img {
+        width: 280px;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        transition: 0.4s;
+      }
+
+      .gallery img:hover {
+        transform: scale(1.08);
+      }
+
+      button {
+        padding: 15px 30px;
+        font-size: 18px;
+        background: #ff4d88;
+        border: none;
+        border-radius: 30px;
+        color: white;
+        cursor: pointer;
+        margin-top: 30px;
+      }
+
+      button:hover {
+        background: #ff1f6b;
+      }
+
+      /* LOVE LETTER */
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        color: black;
+        padding: 30px;
+        border-radius: 15px;
+        width: 350px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+      }
+
+      .popup h2 {
+        color: #ff2e63;
+      }
+
+      .hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .heart {
+        position: absolute;
+        color: #ff4d88;
+        font-size: 20px;
+        animation: float 6s linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh);
+        }
+        100% {
+          transform: translateY(-10vh);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Happy Birthday Vishwa 🎂❤️</h1>
+
+    <div id="countdown"></div>
+
+    <p>Every moment with you is special 💕</p>
+
+    <button onclick="openLetter()">Open My Letter For You 💌</button>
+
+    <div class="gallery">
+      <img src="photo1.jpeg" />
+      <img src="photo2.jpeg" />
+      <img src="photo3.jpeg" />
+      <img src="photo4.jpeg" />
+    </div>
+
+    <!-- LOVE LETTER -->
+
+    <div class="popup" id="letter">
+      <h2>To My Love, Vishwa ❤️</h2>
+
+      <p>
+        Happy Birthday my love. Meeting you was the best thing that ever
+        happened to me. Every moment with you feels magical. Your smile makes my
+        world brighter and being with you makes everything feel right. I’m so
+        lucky to have you in my life. I promise to create many more memories
+        with you. Happy Birthday once again ❤️ Forever yours, Samarth
+      </p>
+
+      <button onclick="closeLetter()">Close</button>
+    </div>
+
+    <!-- MUSIC -->
+
+    <audio autoplay loop>
+      <source
+        src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2c6bcb8c4c.mp3"
+      />
+    </audio>
+
+    <div class="hearts" id="hearts"></div>
+
+    <script>
+      /* COUNTDOWN */
+
+      let birthday = new Date("2026-03-06 00:00:00").getTime();
+
+      let x = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = birthday - now;
+
+        let hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML =
+          hours +
+          "h " +
+          minutes +
+          "m " +
+          seconds +
+          "s until Vishwa's Birthday 🎉";
+      }, 1000);
+
+      /* LOVE LETTER */
+
+      function openLetter() {
+        document.getElementById("letter").style.display = "block";
+      }
+
+      function closeLetter() {
+        document.getElementById("letter").style.display = "none";
+      }
+
+      /* FLOATING HEARTS */
+
+      function createHeart() {
+        let heart = document.createElement("div");
+        heart.classList.add("heart");
+
+        heart.innerHTML = "❤️";
+
+        heart.style.left = Math.random() * 100 + "%";
+
+        heart.style.fontSize = Math.random() * 20 + 10 + "px";
+
+        document.getElementById("hearts").appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 6000);
+      }
+
+      setInterval(createHeart, 300);
+    </script>
+  </body>
+</html>
