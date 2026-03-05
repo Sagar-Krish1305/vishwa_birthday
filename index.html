@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Birthday Vishwa ❤️</title>
 
     <style>
@@ -112,6 +113,71 @@
         }
         100% {
           transform: translateY(-10vh);
+        }
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 28px;
+          margin-top: 20px;
+          padding: 0 10px;
+        }
+
+        #countdown {
+          font-size: 18px;
+          margin: 10px;
+        }
+
+        p {
+          font-size: 16px;
+          padding: 0 15px;
+        }
+
+        button {
+          padding: 12px 24px;
+          font-size: 16px;
+          margin-top: 20px;
+        }
+
+        .gallery {
+          gap: 12px;
+          margin-top: 25px;
+          padding: 0 10px;
+        }
+
+        .gallery img {
+          width: calc(50% - 16px);
+          height: 200px;
+        }
+
+        .popup {
+          width: 85%;
+          max-width: 320px;
+          padding: 20px;
+        }
+
+        .popup h2 {
+          font-size: 20px;
+        }
+
+        .popup p {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        h1 {
+          font-size: 24px;
+        }
+
+        #countdown {
+          font-size: 16px;
+        }
+
+        .gallery img {
+          width: calc(50% - 12px);
+          height: 170px;
         }
       }
     </style>
