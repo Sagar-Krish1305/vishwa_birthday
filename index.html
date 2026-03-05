@@ -80,6 +80,16 @@
         color: #ff2e63;
       }
 
+      #fireworks {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
       .hearts {
         position: fixed;
         top: 0;
@@ -147,16 +157,30 @@
       />
     </audio>
 
+    <canvas id="fireworks"></canvas>
     <div class="hearts" id="hearts"></div>
 
     <script>
       /* COUNTDOWN */
 
       let birthday = new Date("2026-03-06 00:00:00").getTime();
+      let countdownOver = false;
+      let fireworkInterval = null;
 
       let x = setInterval(function () {
         let now = new Date().getTime();
         let distance = birthday - now;
+
+        if (distance <= 0) {
+          clearInterval(x);
+          document.getElementById("countdown").innerHTML =
+            "🎉🎂 Happy Birthday Vishwa! 🎂🎉";
+          if (!countdownOver) {
+            countdownOver = true;
+            startFireworks();
+          }
+          return;
+        }
 
         let hours = Math.floor(
           (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
@@ -203,6 +227,128 @@
       }
 
       setInterval(createHeart, 300);
+
+      /* FIREWORKS */
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      const fireworkColors = [
+        "#ff4d88",
+        "#ff6b6b",
+        "#ffd700",
+        "#00e5ff",
+        "#ff00ff",
+        "#7b68ee",
+        "#ff8c00",
+        "#00ff88",
+      ];
+
+      class Particle {
+        constructor(x, y, color, isRocket) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.isRocket = isRocket;
+          if (isRocket) {
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = -(Math.random() * 4 + 6);
+            this.size = 3;
+            this.alpha = 1;
+            this.targetY = Math.random() * canvas.height * 0.4 + 50;
+          } else {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 5 + 1;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.size = Math.random() * 2.5 + 1;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.02 + 0.015;
+            this.gravity = 0.04;
+          }
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.isRocket) {
+            this.vy += 0.03;
+            this.alpha -= 0.005;
+          } else {
+            this.vy += this.gravity;
+            this.alpha -= this.decay;
+            this.vx *= 0.98;
+          }
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = Math.max(this.alpha, 0);
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      let particles = [];
+
+      function launchFirework() {
+        const x = Math.random() * canvas.width;
+        const y = canvas.height;
+        const color =
+          fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+        const rocket = new Particle(x, y, color, true);
+        rocket.explodeAt = rocket.targetY;
+        rocket.color2 =
+          fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+        particles.push(rocket);
+      }
+
+      function explode(x, y, color) {
+        const count = 60 + Math.floor(Math.random() * 40);
+        for (let i = 0; i < count; i++) {
+          particles.push(new Particle(x, y, color, false));
+        }
+      }
+
+      function animateFireworks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.update();
+          p.draw();
+          if (p.isRocket && p.y <= p.explodeAt) {
+            explode(p.x, p.y, p.color);
+            explode(p.x, p.y, p.color2);
+            particles.splice(i, 1);
+          } else if (p.alpha <= 0) {
+            particles.splice(i, 1);
+          }
+        }
+        requestAnimationFrame(animateFireworks);
+      }
+
+      animateFireworks();
+
+      function startFireworks() {
+        // Big initial burst
+        for (let i = 0; i < 8; i++) setTimeout(launchFirework, i * 150);
+        // Keep launching fireworks continuously
+        fireworkInterval = setInterval(launchFirework, 800);
+      }
+
+      // Check if birthday already passed on page load
+      if (new Date().getTime() >= birthday) {
+        countdownOver = true;
+        document.getElementById("countdown").innerHTML =
+          "🎉🎂 Happy Birthday Vishwa! 🎂🎉";
+        startFireworks();
+      }
     </script>
   </body>
 </html>
